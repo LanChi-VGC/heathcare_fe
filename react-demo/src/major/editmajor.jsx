@@ -1,6 +1,52 @@
 import React, { Component } from 'react';
+import MajorService from '../api/MajorService';
 
 class EditMajor extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            id:this.props.match.params.id,
+            maChuyenNganh:'',
+            tenChuyenNganh:''
+        };
+        this.changemaChuyenNganh=this.changemaChuyenNganh.bind(this);
+        this.changetenChuyenNganh=this.changetenChuyenNganh.bind(this);
+        this.updateMajor=this.updateMajor.bind(this);
+    }
+    componentDidMount(){
+       
+        MajorService.getMajorById(this.state.id).then((res)=>{
+            let major = res.data;
+            console.log(res)
+            this.setState({
+               maChuyenNganh: major.maChuyenNganh,
+               tenChuyenNganh: major.tenChuyenNganh
+            });
+        });
+}
+
+    changemaChuyenNganh = (event) => {
+        this.setState({maChuyenNganh: event.target.value});
+    }
+    changetenChuyenNganh= (event) => {
+        this.setState({tenChuyenNganh: event.target.value});
+    }
+    updateMajor = (e) => {
+        e.preventDefault();
+        let major = {
+            id:this.state.id,
+            maChuyenNganh: this.state.maChuyenNganh,
+            tenChuyenNganh: this.state.tenChuyenNganh
+        };
+        console.log("major =>" + JSON.stringify(major));
+        MajorService.updateMajor(major,this.state.id).then(res => {
+            this.props.history.push('/majorlist');
+        });
+    }
+    cancel(){
+       
+        this.props.history.push('/majorlist');
+    }
     render() {
         return (
             <div>
@@ -17,14 +63,22 @@ class EditMajor extends Component {
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="form-group">
-                                            <label>Tên chuyên ngành<span class="text-danger">*</span></label>
-                                            <input class="form-control" type="text" />
+                                            <label>Mã chuyên ngành<span class="text-danger">*</span></label>
+                                            <input class="form-control" type="text" value={this.state.maChuyenNganh}
+                                                onChange={this.changemaChuyenNganh}/>
                                         </div>
-                                    </div>                                          
+                                    </div> 
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label>Tên chuyên ngành<span class="text-danger">*</span></label>
+                                            <input class="form-control" type="text" value={this.state.tenChuyenNganh}
+                                                onChange={this.changetenChuyenNganh}/>
+                                        </div>
+                                    </div>                                       
                                 </div>
                                 <div class="m-t-20 text-center">
-                                    <button class="btn btn-primary submit-btn mr-3">TẠO MỚI</button>
-                                    <button class="btn btn-info submit-btn">TRỞ VỀ</button>
+                                    <button class="btn btn-primary submit-btn mr-3" onClick={this.updateMajor}>CẬP NHẬT</button>
+                                    <button class="btn btn-info submit-btn" onClick={this.cancel.bind(this)}>TRỞ VỀ</button>
                                 </div>
                             </form>
                         </div>

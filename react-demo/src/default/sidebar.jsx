@@ -15,7 +15,7 @@ class Sidebar extends Component {
                                     <Link to="/home"><i class="fas fa-tachometer-alt"></i> <span>Trang chủ</span></Link>
                                 </li>
                                 <li>
-                                    <Link to="/accountlist"><i class="fas fa-user"></i> <span>Tài khoản</span></Link>
+                                    <Link to="/adminlist"><i class="fas fa-user"></i> <span>Tài khoản</span></Link>
                                 </li>
                                 <li>
                                     <Link to="/tiplist"><i class="fab fa-gratipay"></i><span>Thủ thuật</span></Link>
@@ -24,16 +24,10 @@ class Sidebar extends Component {
                                     <Link to="/nursinglist"><i class="fa fa-user-md"></i> <span>Điều dưỡng</span></Link>
                                 </li>
                                 <li>
-                                    <Link to="/customerlist"><i class="fa fa-wheelchair"></i> <span>Khách hàng</span></Link>
-                                </li>
-                                <li>
                                     <Link to="/appointlist"><i class="far fa-building"></i> <span>Lịch khám</span></Link>
                                 </li>
                                 <li>
                                     <Link to="/licenselist"><i class="far fa-calendar-check"></i> <span>Giấy phép công việc</span></Link>
-                                </li>
-                                <li>
-                                    <Link to="/detaillist"><i class="fas fa-file-invoice-dollar"></i> <span>Chi tiết đặt lịch</span></Link>
                                 </li>
                                 <li>
                                     <Link to="/arealist"><i class="fas fa-globe"></i> <span>Khu vực</span></Link>

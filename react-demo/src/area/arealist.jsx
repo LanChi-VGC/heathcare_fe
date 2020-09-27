@@ -1,7 +1,31 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import AreaService from '../api/AreaService';
 
 class Areas extends Component {
+    constructor(props){
+        super(props);
+        this.state = {areas : []}
+       
+    }
+    deleteArea(id){
+        AreaService.deleteArea(id).then(res => {
+            this.setState({areas : this.state.areas.filter(area => area.id !== id)});
+        });
+    }
+
+    editArea(id){
+        this.props.history.push(`/editarea/${id}`);
+    }
+    addArea(){
+        this.props.history.push('/addarea');
+    }
+    componentDidMount(){
+        AreaService.getAreas().then(res => {
+            console.log(res);
+            this.setState({areas : res.data});
+        })
+    }
     render() {
         return (
             <div>
@@ -12,7 +36,7 @@ class Areas extends Component {
                                  <h4 class="page-title">Khu vực</h4>
                             </div>
                             <div class="col-sm-8 col-9 text-right m-b-20">
-                            <Link to="/addarea" class="btn btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i> Thêm khu vực</Link>
+                            <button class="btn btn btn-primary btn-rounded float-right" onClick={()=>this.addArea()}><i class="fa fa-plus"></i> Thêm khu vực</button>
                             </div>
                         </div>
 				        <div class="row">
@@ -29,21 +53,26 @@ class Areas extends Component {
                                             </tr>
 								        </thead>
 								        <tbody>
-                                            <tr>
-                                             <td></td>
-                                             <td></td>
-                                             <td></td>
-                                             <td></td>
-                                             <td class="text-right">
-                                                    <div class="dropdown dropdown-action">
-                                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                                                        <div class="dropdown-menu dropdown-menu-right">
-                                                            <Link class="dropdown-item" to="/editarea"><i class="far fa-edit m-r-5"></i>Sửa</Link>
-                                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_patient"><i class="far fa-trash-alt m-r-5"></i>Xóa</a>
-                                                        </div>
-                                                    </div>
-                                                </td> 
-                                            </tr>
+                                            {
+                                                this.state.areas.map((area,idx)=>
+                                                <tr key={area.id}>
+                                                <td>{idx+1}</td>
+                                                <td>{area.maKhuVuc}</td>
+                                                <td>{area.tenKhuVuc}</td>
+                                                <td>{area.gia}</td>
+                                                <td class="text-right">
+                                                       <div class="dropdown dropdown-action">
+                                                           <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                                           <div class="dropdown-menu dropdown-menu-right">
+                                                           <button class="dropdown-item" onClick={()=>this.editArea(area.id)}><i class="far fa-edit m-r-5"></i>Sửa</button>
+                                                                  <button class="dropdown-item" onClick={()=>{this.deleteArea(area.id)}}><i class="far fa-trash-alt m-r-5"></i>Xóa</button>
+                                                           </div>
+                                                       </div>
+                                                   </td> 
+                                               </tr>
+                                                )
+                                            }
+                                        
 								        </tbody>
                                     </table>
                                 </div>

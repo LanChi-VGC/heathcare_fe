@@ -1,7 +1,31 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import AppointService from '../api/AppointService';
 
 class Appoints extends Component {
+    constructor(props){
+        super(props);
+        this.state={appoints :[]}
+     
+
+        
+    }
+    deleteAppoint(id){
+        AppointService.deleteApoint(id).then(res => {
+            this.setState({appoints : this.state.appoints.filter(appoint => appoint.id !== id)});
+        });
+    }
+    editAppoint(id){
+        this.props.history.push(`/editappoint/${id}`);
+    }
+    addAppoint(){
+        this.props.history.push('/addappoint');
+    }
+    componentDidMount(){
+       AppointService.getAppoints().then(res =>{
+           console.log(res);
+           this.setState({appoints : res.data});
+       })
+    }  
     render() {
         return (
             <div>
@@ -12,7 +36,7 @@ class Appoints extends Component {
                                  <h4 class="page-title">Đặt lịch</h4>
                             </div>
                             <div class="col-sm-8 col-9 text-right m-b-20">
-                            <Link to="/addappoint" class="btn btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i> Thêm lịch đặt</Link>
+                            <button class="btn btn btn-primary btn-rounded float-right" onClick={()=>this.addAppoint()}><i class="fa fa-plus"></i> Thêm lịch khám</button>
                             </div>
                         </div>
 				        <div class="row">
@@ -22,36 +46,41 @@ class Appoints extends Component {
 								        <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Mã đặt lịch</th>
                                                 <th>Tên khách hàng</th>
-                                                <th>Điện thoại</th>
                                                 <th>Email</th>
+                                                <th>Điện thoại</th>
+                                                <th>Ngày bắt đầu</th>
+                                                <th>Giờ bắt đầu</th>
+                                                <th>Số ngày</th>
                                                 <th>Tổng tiền</th>
-                                                <th>Ngày đặt lịch</th>
-                                                <th>Khu vực</th>
                                                 <th class="text-right"></th>
                                             </tr>
 								        </thead>
 								        <tbody>
-                                            <tr>
-                                             <td></td>
-                                             <td></td>
-                                             <td></td>
-                                             <td></td>
-                                             <td></td>
-                                             <td></td>
-                                             <td></td>
-                                             <td></td>
-                                             <td class="text-right">
-                                                    <div class="dropdown dropdown-action">
-                                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                                                        <div class="dropdown-menu dropdown-menu-right">
-                                                            <Link class="dropdown-item" to="/editappoint"><i class="far fa-edit m-r-5"></i>Sửa</Link>
-                                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_patient"><i class="far fa-trash-alt m-r-5"></i>Xóa</a>
-                                                        </div>
-                                                    </div>
-                                                </td> 
-                                            </tr>
+                                            {
+                                                this.state.appoints.map((appoint,idx) =>
+                                                    <tr key={appoint.id}>
+                                                    <td>{idx+1}</td>
+                                                    <td>{appoint.tenKhachHang}</td>
+                                                    <td>{appoint.email}</td>
+                                                    <td>{appoint.dienThoai}</td>
+                                                    <td>{appoint.ngayBatDau}</td>
+                                                    <td>{appoint.gioBatDau}</td>
+                                                    <td>{appoint.soNgay}</td>
+                                                    <td>{appoint.tongTien}</td>
+                                                    <td></td>
+                                                    <td class="text-right">
+                                                           <div class="dropdown dropdown-action">
+                                                               <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                                               <div class="dropdown-menu dropdown-menu-right">
+                                                               <button class="dropdown-item" onClick={()=>this.editAppoint(appoint.id)}><i class="far fa-edit m-r-5"></i>Sửa</button>
+                                                               <button class="dropdown-item" onClick={()=>this.deleteAppoint(appoint.id)}><i class="far fa-trash-alt m-r-5"></i>Xóa</button>
+                                                               </div>
+                                                           </div>
+                                                       </td> 
+                                                   </tr>
+                                                )
+                                            }
 								        </tbody>
                                     </table>
                                 </div>
@@ -64,7 +93,7 @@ class Appoints extends Component {
                             <div class="modal-content">
                                 <div class="modal-body text-center">
                                     <img src={require("../img/sent.png")} alt="" width={"50"} height={"46"}/>
-                                    <h3>Bạn có chắc muốn xóa khách hàng này ?</h3>
+                                    <h3>Bạn có chắc muốn xóa thủ thuật này ?</h3>
                                     <div class="m-t-20"> <a href="#" class="btn btn-white" data-dismiss="modal">Đóng</a>
                                         <button type="submit" class="btn btn-danger">Xóa</button>
                                     </div>

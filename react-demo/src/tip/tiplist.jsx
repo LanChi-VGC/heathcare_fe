@@ -8,6 +8,15 @@ class Tips extends Component {
         this.state={tips :[]}
         this.addTip = this.addTip.bind(this);
 
+        
+    }
+    deleteTip(id){
+        TipService.deleteTip(id).then(res => {
+            this.setState({tips : this.state.tips.filter(tip => tip.id !== id)});
+        });
+    }
+    editTip(id){
+        this.props.history.push(`/edittip/${id}`);
     }
     addTip(){
         this.props.history.push('/addtip');
@@ -41,6 +50,7 @@ class Tips extends Component {
                                                 <th>Mã thủ thuật</th>
                                                 <th>Tên thủ thuật</th>
                                                 <th>Giá thủ thuật</th>
+                                                <th>Loại dịch vụ</th>
                                                 <th class="text-right"></th>
                                             </tr>
 								        </thead>
@@ -52,13 +62,14 @@ class Tips extends Component {
                                                     <td>{tip.maDichVu}</td>
                                                     <td>{tip.tenDichVu}</td>
                                                     <td>{tip.giaDichVu}</td>
+                                                    <td>{tip.loaiDichVu.tenLoaiDV}</td>
                                                     <td></td>
                                                     <td class="text-right">
                                                            <div class="dropdown dropdown-action">
                                                                <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                                                <div class="dropdown-menu dropdown-menu-right">
-                                                                   <button class="dropdown-item"><i class="far fa-edit m-r-5"></i>Sửa</button>
-                                                                   <button class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_patient"><i class="far fa-trash-alt m-r-5"></i>Xóa</button>
+                                                               <button class="dropdown-item" onClick={()=>this.editTip(tip.id)}><i class="far fa-edit m-r-5"></i>Sửa</button>
+                                                               <button class="dropdown-item" onClick={()=>this.deleteTip(tip.id)}><i class="far fa-trash-alt m-r-5"></i>Xóa</button>
                                                                </div>
                                                            </div>
                                                        </td> 

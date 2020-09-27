@@ -1,19 +1,32 @@
+
 import React, { Component } from 'react';
 import TipService from '../api/TipService';
+import TypeService from '../api/TypeService';
 
 class AddTip extends Component {
     constructor(props){
         super(props);
         this.state = {
+            listDV: [],
             id :'',
-            maDichVu:'',
-            tenDichVu:'',
-            giaDichVu:''
+             maDichVu:'',
+             tenDichVu:'',
+             giaDichVu:'',
+             loaiDichVu:''
+            
         }
         this.changemaDichVu=this.changemaDichVu.bind(this);
         this.changetenDichVu=this.changetenDichVu.bind(this);
         this.changegiaDichVu=this.changegiaDichVu.bind(this);
         this.saveTip=this.saveTip.bind(this);
+    }
+
+    componentDidMount(){
+        TypeService.getServices().then(res=>{this.setState({listDV: res.data})});
+    }
+    changeloaiDichVu = (event) => {
+        this.setState({loaiDichVu: event.target.value});
+
     }
     changemaDichVu = (event) => {
         this.setState({maDichVu: event.target.value});
@@ -29,9 +42,11 @@ class AddTip extends Component {
         let tip = {
             maDichVu: this.state.maDichVu,
             tenDichVu: this.state.tenDichVu,
-            giaDichVu: this.state.giaDichVu
+            giaDichVu: this.state.giaDichVu,
+            loaiDichVu: this.state.listDV.find(x=>x.maLoaiDV===this.state.loaiDichVu)
         };
         console.log("tip =>" + JSON.stringify(tip));
+
         TipService.createTip(tip).then(res =>{
                 this.props.history.push('/tiplist');
         });
@@ -40,7 +55,17 @@ class AddTip extends Component {
        
         this.props.history.push('/tiplist');
     }
+    renderListDichVu=()=>{
+     
+        return this.state.listDV.map((item,index)=>{
+            return(
+                <option value={item.maLoaiDV} key={index}>{item.tenLoaiDV}</option>
+            )
+        })
+    }
+
     render() {
+        
         return (
             <div>
             <div class="page-wrapper">
@@ -71,6 +96,18 @@ class AddTip extends Component {
                                             <label>Giá thủ thuật<span class="text-danger">*</span></label>
                                             <input class="form-control" type="text" value={this.state.giaDichVu} onChange={this.changegiaDichVu}/>
                                         </div>
+                                    </div>
+                                    <div className="col-sm-12">
+                                    <div class="form-group">
+                                            <label>Loại dịch vụ</label>
+                                            <select id="selectdv"  onChange={this.changeloaiDichVu}>
+                                                <option value="-1">--Chọn--</option>
+                                                    {this.renderListDichVu()}
+                                            </select>
+                                        </div>
+                                      
+
+                                            
                                     </div> 
                                 </div>
                                 <div class="m-t-20 text-center">
@@ -88,3 +125,6 @@ class AddTip extends Component {
 }
 
 export default AddTip;
+
+
+                                          
